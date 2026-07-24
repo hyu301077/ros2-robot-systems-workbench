@@ -74,8 +74,14 @@
 3. 受限环境中的ROS CLI daemon不能可靠查询图。冒烟测试使用Humble实际支持的
    `--no-daemon`直接查询DDS图；普通用户终端仍可使用README中的标准命令。
 
+## 仓库级补充验证
+
+- 源码已上传到公开GitHub仓库。
+- GitHub Actions运行`30076049851`在Ubuntu 22.04/Humble与
+  Ubuntu 26.04/Lyrical runner上均通过依赖检查、构建、单元测试和有界冒烟测试。
+- Lyrical runner结果是跨发行版兼容性的自动化证据，但不等同于终端2实机验证。
+
 ## 尚未验证
 
-- 终端2 Ubuntu 26.04 / ROS 2 Lyrical构建与运行。
-- GitHub Actions中的Humble和Lyrical两个job。
-- GitHub上传、第二终端拉取和AI增量交接流程。
+- 终端2实机上的Ubuntu 26.04 / ROS 2 Lyrical构建与运行。
+- 第二终端拉取和AI增量交接流程。

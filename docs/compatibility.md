@@ -27,14 +27,15 @@ explicitly out of scope. GitHub synchronizes source code only.
 
 ## Build-system compatibility
 
-The two C++ node packages link against the modern CMake targets
-`rclcpp::rclcpp` and `${robot_device_interfaces_TARGETS}`. This form is
-available in Humble and Lyrical and keeps ROS distribution checks out of the
-C++ source.
+The two C++ node packages link with the modern imported target
+`rclcpp::rclcpp` and the generated target list exported through
+`${robot_device_interfaces_TARGETS}`. This form has passed both Humble and
+Lyrical CI and keeps ROS distribution checks out of the C++ source.
 
 The older `ament_target_dependencies()` helper is intentionally not used.
-Although it is available in Humble, the Lyrical CI environment does not expose
-that command. The repository's static audit rejects it to prevent this
+Although it is available after `find_package(ament_cmake)` in Humble, the
+current Lyrical configuration does not expose that helper through the same
+package lookup. The repository's static audit rejects it to prevent this
 compatibility regression from returning.
 
 ## Lifecycle
@@ -55,5 +56,7 @@ Official references:
 - Terminal 1 ROS 2 Humble build, unit test and bounded runtime smoke test:
   passed on Ubuntu 22.04.5; see
   [validation_terminal1.md](validation_terminal1.md).
+- GitHub Actions run `30076049851`: Humble/Ubuntu 22.04 and Lyrical/Ubuntu
+  26.04 dependency checks, builds, unit tests and bounded smoke tests passed.
 - Terminal 2 ROS 2 Lyrical build: not run in this workspace.
 - Cross-device communication: intentionally not applicable.
