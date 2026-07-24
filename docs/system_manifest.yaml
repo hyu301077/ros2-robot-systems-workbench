@@ -1,0 +1,96 @@
+schema_version: 1
+
+project:
+  name: ros2_robot_systems_workbench
+  phase: terminal_1_validated
+  language: C++
+  cpp_standard: 17
+  build_system: ament_cmake
+  workspace_builder: colcon
+
+targets:
+  terminal_1:
+    operating_system: Ubuntu 22.04
+    ros_distribution: humble
+    role: compatibility
+    runtime_scope: local_complete_system
+    verification: passed
+  terminal_2:
+    operating_system: Ubuntu 26.04
+    ros_distribution: lyrical
+    role: primary
+    runtime_scope: local_complete_system
+    verification: not_run
+
+runtime_policy:
+  synchronize_source_via_github: true
+  share_build_artifacts: false
+  cross_device_ros_communication: false
+  mixed_distribution_ros_graph: false
+
+packages:
+  robot_device_interfaces:
+    kind: interface
+    status: built_on_humble
+    messages:
+      - DeviceStatus
+  device_simulator:
+    kind: executable
+    status: built_and_smoke_tested_on_humble
+    nodes:
+      - device_simulator_node
+    parameters:
+      device_id:
+        type: string
+        default: robot-001
+      initial_battery_level:
+        type: double
+        default: 100.0
+      software_version:
+        type: string
+        default: 1.0.0
+      publish_period_ms:
+        type: integer
+        default: 1000
+  device_monitor:
+    kind: executable
+    status: built_unit_tested_and_smoke_tested_on_humble
+    nodes:
+      - device_monitor_node
+    alert_rules:
+      low_battery:
+        comparison: battery_level < 20.0
+        ros_log_level: WARN
+      high_temperature:
+        comparison: temperature > 70.0
+        ros_log_level: ERROR
+
+communication:
+  status: passed_on_terminal_1
+  topics:
+    - name: /device/status
+      message_type: robot_device_interfaces/msg/DeviceStatus
+      publisher: device_simulator_node
+      subscribers:
+        - device_monitor_node
+
+validation:
+  full_static_audit: passed
+  interface_package_static_audit: passed
+  interface_package_build: passed_humble
+  simulator_package_static_audit: passed
+  simulator_package_build: passed_humble
+  monitor_package_static_audit: passed
+  monitor_package_build: passed_humble
+  alert_evaluator_native_unit_test: passed
+  low_battery_logic: passed
+  high_temperature_logic: passed
+  workspace_build: passed_humble
+  unit_tests: passed_humble_1_test
+  low_battery_warning: passed_humble
+  high_temperature_error: passed_humble
+  topic_communication: passed_humble
+  bounded_launch_smoke_test: passed_humble
+  rosdep_check: passed_humble
+  github_actions_humble: not_run
+  github_actions_lyrical: not_run

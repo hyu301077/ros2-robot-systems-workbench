@@ -1,0 +1,36 @@
+# ROS 2 / colcon generated output
+build/
+install/
+log/
+
+# Local ROS runtime data and recordings
+.ros/
+rosbag2_*/
+*.bag
+*.db3
+*.mcap
+
+# CMake and compiler tooling
+CMakeFiles/
+CMakeCache.txt
+compile_commands.json
+
+# Editors and local AI context
+.idea/
+.vscode/
+AI_CONTEXT.local.md
+
+# Python caches created by ROS 2 tooling and launch tests
+__pycache__/
+*.py[cod]
+.pytest_cache/
+
+# Credentials and machine-local configuration
+.env
+.env.*
+!.env.example
+
+# General temporary files
+*.log
+*.swp
+*~

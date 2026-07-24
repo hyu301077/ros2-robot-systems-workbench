@@ -1,0 +1,56 @@
+name: ROS 2 dual-distro CI
+
+"on":
+  pull_request:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ros2-ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build-test-smoke:
+    name: ${{ matrix.ros_distro }} on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-22.04
+            ros_distro: humble
+          - os: ubuntu-26.04
+            ros_distro: lyrical
+
+    steps:
+      - name: Check out source
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+
+      - name: Install ROS 2 and development tools
+        uses: ros-tooling/setup-ros@649ef6bcd696da05bc27ceb3fab69d810c0daeab # v0.7
+        with:
+          required-ros-distributions: ${{ matrix.ros_distro }}
+
+      - name: Check declared dependencies
+        shell: bash
+        run: |
+          source "/opt/ros/${{ matrix.ros_distro }}/setup.bash"
+          rosdep check --from-paths src --ignore-src
+
+      - name: Build, test, and run bounded smoke test
+        shell: bash
+        run: tools/verify_workspace.sh
+
+      - name: Upload diagnostic logs on failure
+        if: failure()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: ros2-logs-${{ matrix.ros_distro }}
+          path: log/
+          if-no-files-found: ignore
