@@ -90,6 +90,21 @@ def audit_packages() -> None:
         "device_simulator: launch runtime dependencies are incomplete",
     )
 
+    for package_name in ["device_simulator", "device_monitor"]:
+        cmake = read(f"src/{package_name}/CMakeLists.txt")
+        require(
+            "ament_target_dependencies" not in cmake,
+            f"{package_name}: deprecated ament_target_dependencies is not Lyrical-compatible",
+        )
+        require(
+            "rclcpp::rclcpp" in cmake,
+            f"{package_name}: missing modern rclcpp imported target",
+        )
+        require(
+            "${robot_device_interfaces_TARGETS}" in cmake,
+            f"{package_name}: missing generated interface targets",
+        )
+
 
 def audit_message_contract() -> None:
     message = read("src/robot_device_interfaces/msg/DeviceStatus.msg")

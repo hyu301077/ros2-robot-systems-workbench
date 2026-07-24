@@ -28,11 +28,10 @@ add_executable(device_monitor_node
 )
 target_compile_features(device_monitor_node PUBLIC cxx_std_17)
 target_link_libraries(device_monitor_node
-  device_alert_evaluator
-)
-ament_target_dependencies(device_monitor_node
-  rclcpp
-  robot_device_interfaces
+  PRIVATE
+    device_alert_evaluator
+    rclcpp::rclcpp
+    ${robot_device_interfaces_TARGETS}
 )
 
 install(

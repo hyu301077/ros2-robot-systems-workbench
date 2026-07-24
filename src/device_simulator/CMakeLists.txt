@@ -18,9 +18,10 @@ add_executable(device_simulator_node
   src/device_simulator_node.cpp
 )
 target_compile_features(device_simulator_node PUBLIC cxx_std_17)
-ament_target_dependencies(device_simulator_node
-  rclcpp
-  robot_device_interfaces
+target_link_libraries(device_simulator_node
+  PRIVATE
+    rclcpp::rclcpp
+    ${robot_device_interfaces_TARGETS}
 )
 
 install(

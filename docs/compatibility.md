@@ -25,6 +25,18 @@ explicitly out of scope. GitHub synchronizes source code only.
 - Verify every new ROS dependency on both distributions before accepting it.
 - Keep interface definitions identical on both targets.
 
+## Build-system compatibility
+
+The two C++ node packages link against the modern CMake targets
+`rclcpp::rclcpp` and `${robot_device_interfaces_TARGETS}`. This form is
+available in Humble and Lyrical and keeps ROS distribution checks out of the
+C++ source.
+
+The older `ament_target_dependencies()` helper is intentionally not used.
+Although it is available in Humble, the Lyrical CI environment does not expose
+that command. The repository's static audit rejects it to prevent this
+compatibility regression from returning.
+
 ## Lifecycle
 
 ROS 2 Humble targets Ubuntu 22.04 and reaches end of life in May 2027. ROS 2
