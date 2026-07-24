@@ -252,6 +252,7 @@ def audit_docs_and_ci() -> None:
         "ros_distro: humble",
         "ubuntu-26.04",
         "ros_distro: lyrical",
+        "rosdep update",
         "tools/verify_workspace.sh",
     ]:
         require(fragment in workflow, f"CI matrix/command missing: {fragment}")
