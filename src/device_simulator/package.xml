@@ -10,10 +10,12 @@
   <maintainer email="284836894+hyu301077@users.noreply.github.com">hanyu</maintainer>
   <license>Apache-2.0</license>
 
+  <!-- depend 表示编译和运行都需要：节点 API 来自 rclcpp，消息类型来自接口 package。 -->
   <buildtool_depend>ament_cmake</buildtool_depend>
   <depend>rclcpp</depend>
   <depend>robot_device_interfaces</depend>
 
+  <!-- Launch 文件会同时启动 monitor，因此即使模拟器源码不链接它，也要声明运行依赖。 -->
   <exec_depend>device_monitor</exec_depend>
   <exec_depend>launch</exec_depend>
   <exec_depend>launch_ros</exec_depend>
