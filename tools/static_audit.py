@@ -90,6 +90,34 @@ def audit_packages() -> None:
         "device_simulator: launch runtime dependencies are incomplete",
     )
 
+    node_targets = {
+        "device_simulator": "device_simulator_node",
+        "device_monitor": "device_monitor_node",
+    }
+    for package_name, node_target in node_targets.items():
+        cmake = read(f"src/{package_name}/CMakeLists.txt")
+        cmake_without_comments = re.sub(r"#[^\n]*", "", cmake)
+        require(
+            "ament_target_dependencies" not in cmake_without_comments,
+            f"{package_name}: ament_target_dependencies violates the modern CMake policy",
+        )
+        link_block = re.search(
+            rf"target_link_libraries\s*\(\s*{re.escape(node_target)}\s+"
+            r"PRIVATE(?P<body>.*?)\)",
+            cmake_without_comments,
+            flags=re.DOTALL,
+        )
+        require(link_block is not None, f"{package_name}: missing PRIVATE link block")
+        link_body = link_block.group("body") if link_block is not None else ""
+        require(
+            "rclcpp::rclcpp" in link_body,
+            f"{package_name}: node link block is missing rclcpp::rclcpp",
+        )
+        require(
+            "${robot_device_interfaces_TARGETS}" in link_body,
+            f"{package_name}: node link block is missing generated interface targets",
+        )
+
 
 def audit_message_contract() -> None:
     message = read("src/robot_device_interfaces/msg/DeviceStatus.msg")
@@ -252,6 +280,7 @@ def audit_docs_and_ci() -> None:
         "ros_distro: humble",
         "ubuntu-26.04",
         "ros_distro: lyrical",
+        "rosdep update",
         "tools/verify_workspace.sh",
     ]:
         require(fragment in workflow, f"CI matrix/command missing: {fragment}")

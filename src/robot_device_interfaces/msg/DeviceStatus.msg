@@ -1,14 +1,14 @@
-# A stable logical identifier, independent of the computer running the node.
+# 设备的逻辑编号。它描述“是哪台设备”，不等同于运行节点的电脑主机名。
 string device_id
 
-# Remaining battery in percent, expected in the range [0.0, 100.0].
+# 剩余电量百分比，约定范围为 [0.0, 100.0]。
 float32 battery_level
 
-# Device temperature in degrees Celsius.
+# 设备温度，单位为摄氏度。
 float32 temperature
 
-# Whether the simulated device is currently available.
+# 设备当前是否在线；V0 模拟器始终发布 true。
 bool online
 
-# Software version reported by the device, for example "1.0.0".
+# 设备上报的软件版本，例如 "1.0.0"。
 string software_version

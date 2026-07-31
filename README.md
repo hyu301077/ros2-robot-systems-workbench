@@ -275,8 +275,10 @@ tools/smoke_test.sh
 | WARN/ERROR真实ROS日志 | 通过：19%低电量WARN、75℃高温ERROR |
 | 有界Launch冒烟测试 | 通过，且退出后未留下节点进程 |
 | `rosdep check --from-paths src --ignore-src` | 通过：所有系统依赖均已满足 |
-| 终端2 Lyrical验证 | 未执行 |
-| GitHub上传 | 未执行 |
+| GitHub Actions Humble验证 | 通过：Ubuntu 22.04 runner完成依赖检查、构建、测试和冒烟测试 |
+| GitHub Actions Lyrical验证 | 通过：Ubuntu 26.04 runner完成依赖检查、构建、测试和冒烟测试 |
+| 终端2实机 Lyrical验证 | 未执行 |
+| GitHub上传 | 已完成：公开仓库 |
 
 完整的终端1命令、版本和测试记录见
 [终端1验证记录](docs/validation_terminal1.md)。
@@ -292,6 +294,10 @@ CI使用固定到完整提交SHA的`ros-tooling/setup-ros`（对应`v0.7`）在�
 中安装ROS开发环境，然后执行依赖检查和`tools/verify_workspace.sh`。CI中的安装只影响
 一次性runner，不会修改终端1或终端2。`ubuntu-26.04`目前仍是GitHub Public Preview
 runner，所以它是辅助证据，不能取代终端2的真实验证。
+
+提交`6c90c60`对应的[双发行版CI运行](https://github.com/hyu301077/ros2-robot-systems-workbench/actions/runs/30076049851)
+已全部通过。项目源码位于公开仓库
+[ros2-robot-systems-workbench](https://github.com/hyu301077/ros2-robot-systems-workbench)。
 
 ## 常见错误与排查
 
